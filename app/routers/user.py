@@ -45,7 +45,7 @@ from jose import JWTError, jwt
 router = APIRouter()
 
 # oauth2_schema depend instance
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
 
 
 # oauth2_schema sub-dependency -- get_current_user
