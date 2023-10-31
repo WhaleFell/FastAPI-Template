@@ -1,9 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Time : 2023/2/2 9:29
-# @Author : zxiaosi
-# @desc : 自定义日志
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
 # type: ignore
+"""
+@File    :   custom_log.py
+@Time    :   2023/10/31 12:59:36
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   自定义日志
+"""
+
 import logging
 import os
 import sys
@@ -49,7 +54,7 @@ class InterceptHandler(logging.Handler):
 
 def format_record(record: dict) -> str:
     """
-    这里的代码是copy的，记录日志格式的
+    这里的代码是copy的,记录日志格式的
     Custom format for loguru loggers.
     Uses pformat for log any data likse request/response body during debug.
     Works with logging if loguru handler it.

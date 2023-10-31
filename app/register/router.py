@@ -1,11 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/register/router.py
+@Time    :   2023/10/31 12:52:50
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   注册路由
+"""
 
-# register/router.py 注册路由
-
-from fastapi import FastAPI, Depends
-
-from app.config import settings
+from fastapi import FastAPI
 from app.routers import index, user
 
 

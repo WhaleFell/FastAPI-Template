@@ -1,7 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/register/middleware.py
+@Time    :   2023/10/31 12:53:29
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   注册中间件
+"""
 
-# register/middleware.py 中间件
 
 from fastapi import FastAPI
 from starlette.requests import Request

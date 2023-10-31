@@ -25,7 +25,7 @@ from app.utils.custom_log import logger
 
 # database
 from app.database import User
-from app.database.curd import (
+from app.database.crud import (
     registerUser,
     getUserByID,
     dumpUsers,

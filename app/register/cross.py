@@ -1,7 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/register/cors.py
+@Time    :   2023/10/31 12:51:16
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   处理跨域 Cross 请求
+"""
 
-# register/cors.py 处理跨域请求
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware

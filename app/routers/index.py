@@ -9,6 +9,6 @@ from app.schemas import BaseResp
 router = APIRouter()
 
 
-@router.get("/",tags=["index"])
+@router.get("/", tags=["index"])
 async def root() -> BaseResp:
-    return BaseResp(code=200, msg="index")
+    return BaseResp(code=1, msg="FastAPI Template! Author: WhaleFall")

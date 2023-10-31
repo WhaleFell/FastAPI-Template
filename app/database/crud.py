@@ -1,8 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# curd/curd.py
-# 数据库操作
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/database/crud.py
+@Time    :   2023/10/31 12:47:02
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   数据库 CRUD
+"""
 
 from .connect import AsyncSessionMaker
 from .model import User
@@ -19,16 +23,6 @@ from sqlalchemy import (
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
-
-# generate AsyncSession in function
-
-# async def getUserByID(user_id: int) -> Optional[User]:
-#     async with AsyncSessionMaker() as session:
-#         result = await session.get(User, ident=user_id)
-#         return result
-# async def registerUser(user: User) -> User:
-#     async with AsyncSessionMaker() as session:
-#         pass
 
 
 async def getUserByID(session: AsyncSession, user_id: int) -> Optional[User]:

@@ -14,16 +14,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ROOTPATH: Path = Path().absolute().parent
 
 
-# https://docs.pydantic.dev/usage/settings/
+# Reference: https://docs.pydantic.dev/usage/settings/
+# Use pydantic_settings to set config in envirenment variable
 class Settings(BaseSettings):
     PROJECT_DESC: str = "🎉 接口汇总 🎉"  # 描述
     PROJECT_VERSION: str = "1.0"  # 版本
 
     STATIC_DIR: str = "static"  # 静态文件目录
-    BASE_URL: AnyHttpUrl = "http://127.0.0.1:8000"  # type: ignore # 开发环境(为了存放图片全路径)
-    API_PREFIX: str = "/api/"
+    BASE_URL: str = "http://127.0.0.1:8000"  # 测试地址
 
-    # 跨域请求(务必指定精确ip, 不要用localhost)
+    # 跨域请求
     CORS_ORIGINS: Union[List[AnyHttpUrl], List[str]] = ["*"]
 
     MD5_SALT: str = "9iJvchvS"  # md5 加密盐
@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     # database config
     # SQLTIE3 sqlite+aiosqlite:///database.db  # 数据库文件名为 database.db 不存在的新建一个
     # 异步 mysql+aiomysql://user:password@host:port/dbname
-    # DB_URL = os.environ.get("DB_URL") or "mysql+aiomysql://root:123456@localhost/tgforward?charset=utf8mb4"
+    # DATABASE_URI = "mysql+aiomysql://root:123456@localhost/tgforward?charset=utf8mb4"
     DATABASE_URI: str = "sqlite+aiosqlite:///database.db"
     DATABASE_ECHO: bool = False  # 是否打印数据库日志 (可看到创建表、表数据增删改查的信息)
 

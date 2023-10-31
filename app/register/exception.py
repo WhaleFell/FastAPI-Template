@@ -1,11 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Time : 2023/1/31 10:05
-# @Author : zxiaosi
-# @desc : 全局异常捕获
-import traceback
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/register/exception.py
+@Time    :   2023/10/31 12:44:47
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   FastAPI exeception handle
+"""
 
 from fastapi import FastAPI, HTTPException
+
+# `jsonable_encoder` can covert the pydantic/datetime/Any to Python object
+# https://fastapi.tiangolo.com/tutorial/encoder/
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
@@ -21,7 +27,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
 
-from app.utils.custom_log import logger
+from app.utils import logger
 from app.schemas import BaseResp
 
 from typing import Optional, Any
@@ -43,11 +49,10 @@ async def get_request_params(request: Request) -> dict:
     methods = ["POST", "PUT", "PATCH"]
     content_type = request.headers.get("content-type")
     if request.method in methods and "application/json" in content_type:  # type: ignore
-        # "request.json()" hangs indefinitely in middleware
+        # "request.json()" hangs(await) indefinitely in middleware
         # no way fix now: https://github.com/tiangolo/fastapi/issues/5386
 
         # body_params = await request.json()  # 请求体参数
-        # body_params = await request.
         # params.update(body_params)
         pass
 
@@ -56,15 +61,16 @@ async def get_request_params(request: Request) -> dict:
 
 def response_body(
     request: Request,
-    content: Any = None,
+    content: Optional[BaseResp] = None,
     status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
 ) -> ORJSONResponse:
-    """返回响应体"""
+    """Direct build response obj to return"""
 
     response = {
         "content": content,
         "status_code": status_code,
-        "headers": {  # 解决跨域问题(仿照500错误的响应头)
+        "headers": {
+            # 解决跨域问题(仿照500错误的响应头)
             "access-control-allow-origin": request.headers.get("origin") or "*",
             "access-control-allow-credentials": "true",
             "content-type": "application/json",
@@ -88,13 +94,15 @@ def register_exception(app: FastAPI):
     ) -> ORJSONResponse:
         """SQLAlchemy错误"""
         params = await get_request_params(request)
-        logger.error(
+        error_info = (
             f"SQL ERROR:{exc} URL:{request.url} Request Parameter:{params}"
         )
 
+        logger.error(error_info)
+
         return response_body(
             request=request,
-            content=BaseResp(code=500, msg=f"SQL ERROR:{exc}").model_dump(),
+            content=BaseResp(code=0, msg=error_info),
         )
 
     @app.exception_handler(RequestValidationError)
@@ -102,36 +110,38 @@ def register_exception(app: FastAPI):
         request: Request, exc: RequestValidationError
     ) -> ORJSONResponse:
         """请求参数验证错误"""
-        logger.error(
-            f"Requests Validation Error:{exc} URL:{request.url} Request Parameter:{await get_request_params(request)}"
-        )
+        error_info = f"Requests Validation Error:{exc} URL:{request.url} Request Parameter:{await get_request_params(request)}"
+
+        logger.error(error_info)
 
         return response_body(
             request=request,
-            content=BaseResp(
-                code=500, msg=f"Requests Validation Error:{exc}"
-            ).model_dump(),
+            content=BaseResp(code=0, msg=error_info),
         )
 
-    # @app.exception_handler(HTTPException)
-    # async def http_exception_handler(  # type: ignore
-    #     request: Request, exc: HTTPException
-    # ) -> ORJSONResponse:
-    #     """HTTP通信错误"""
-    #     logger.error(f"HTTP Error:{exc} URL:{request.url}")
+    @app.exception_handler(HTTPException)
+    async def http_exception_handler(  # type: ignore
+        request: Request, exc: HTTPException
+    ) -> ORJSONResponse:
+        """HTTP通信错误"""
+        error_info = f"HTTP Error:{exc} URL:{request.url}"
+        logger.error(error_info)
 
-    #     return ORJSONResponse(
-    #         BaseResp(code=500, msg=f"HTTP Error:{exc}").model_dump()
-    #     )
+        return ORJSONResponse(BaseResp(code=0, msg=error_info))
 
     @app.exception_handler(Exception)
     async def http_exception_handler(
         request: Request, exc: Exception
     ) -> ORJSONResponse:
         """全局异常"""
-        logger.exception(f"Global Error: {exc} URL:{request.url}")
+        error_info = f"Global Error: {exc} URL:{request.url}"
+
+        logger.exception(error_info)
 
         return response_body(
             request=request,
-            content=BaseResp(code=500, msg=f"Global Error:{exc}").model_dump(),
+            content=BaseResp(
+                code=0,
+                msg=error_info,
+            ),
         )

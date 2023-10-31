@@ -1,7 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/schema/__init__.py
+@Time    :   2023/10/31 12:45:47
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   schemas 响应数据模型
+"""
 
-# schemas 响应数据模型
 
 from .connect import async_engine
 from .model import Base, User
@@ -15,9 +21,9 @@ async def init_table(is_drop: bool = True):
     try:
         async with async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        logger.info("创建表成功!!!")
+        logger.success("Create Database Table Sccuess!")
     except Exception as e:
-        logger.error(f"创建表失败!!! -- 错误信息如下:\n{e}")
+        logger.error(f"Create Database Table ERROR{e}")
 
 
 async def drop_table():
@@ -25,6 +31,6 @@ async def drop_table():
     try:
         async with async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
-        logger.info("删除表成功!!!")
+        logger.success("Drop Database All Table Success!")
     except Exception as e:
-        logger.error(f"删除表失败!!! -- 错误信息如下:\n{e}")
+        logger.error(f"Drop Database Table ERROR{e}")

@@ -1,11 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@File    :   app/database/model
+@Time    :   2023/10/31 12:48:03
+@Author  :   WhaleFall
+@License :   (C)Copyright 2020-2023, WhaleFall
+@Desc    :   SQLAlchemy 数据库模型 ORM
+"""
 
-# curd/model.py
-# 数据库模型
 
 """
-参考文档:
+Reference:
     [1]: https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html#declarative-mapping
     [2]: https://docs.sqlalchemy.org/en/20/orm/declarative_config.html#mapper-configuration-options-with-declarative
     [3]: https://docs.sqlalchemy.org/en/20/orm/declarative_mixins.html#composing-mapped-hierarchies-with-mixins

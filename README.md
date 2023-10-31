@@ -17,7 +17,7 @@ Help me improve development efficiency and learn English.
 ## Project Structurn
 
 ⚠ Modules uniformly use absolute `/ˈæb.sə.luːt/` imports.  
-like `from routers import HelloWorld`
+like `from app.routers import HelloWorld`
 
 ```text
 - app // Project root path
@@ -73,7 +73,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # Activate
 .\venv\Scripts\Activate.ps1
 
-pip install -r requirements.txt --index-url=https://pypi.org/simple
+# update pip version
+python -m pip install --upgrade pip
+
+# install require model
+pip install --upgrade -r requirements.txt --index-url=https://pypi.org/simple
 
 uvicorn app.main:app --port 8000 --reload
 ```
@@ -92,4 +96,5 @@ if __name__ == "__main__":
 3. Best Dockerfile: [https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 4. 相似的项目,最棒的模仿 [https://github.com/zxiaosi/vue3-fastapi/](https://github.com/zxiaosi/vue3-fastapi/)
 5. FastAPI with Async SQLAlchemy: [https://github.com/rhoboro/async-fastapi-sqlalchemy/blob/main/app/db.py](https://github.com/rhoboro/async-fastapi-sqlalchemy/blob/main/app/db.py)
-6. [https://stribny.name/blog/fastapi-asyncalchemy/](https://stribny.name/blog/fastapi-asyncalchemy/)
+6. FastAPI SQLalchemy packaging 封装 [https://stribny.name/blog/fastapi-asyncalchemy/](https://stribny.name/blog/fastapi-asyncalchemy/)
+7. FastAPI-TGDiceAPI myself: [https://github.com/WhaleFell/FastAPI-TGDiceAPI](https://github.com/WhaleFell/FastAPI-TGDiceAPI)
