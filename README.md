@@ -14,7 +14,17 @@ Help me improve development efficiency and learn English.
 5. Use `loguru` to replace `uvicorn` default logging.
 6. Support Oauth2 login.
 
-## Project Structurn
+## Vscode Python code checker
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+use black as Python formater
+
+```shell
+pip install black
+```
+
+## Project Structure
 
 ⚠ Modules uniformly use absolute `/ˈæb.sə.luːt/` imports.  
 like `from app.routers import HelloWorld`
@@ -98,3 +108,4 @@ if __name__ == "__main__":
 5. FastAPI with Async SQLAlchemy: [https://github.com/rhoboro/async-fastapi-sqlalchemy/blob/main/app/db.py](https://github.com/rhoboro/async-fastapi-sqlalchemy/blob/main/app/db.py)
 6. FastAPI SQLalchemy packaging 封装 [https://stribny.name/blog/fastapi-asyncalchemy/](https://stribny.name/blog/fastapi-asyncalchemy/)
 7. FastAPI-TGDiceAPI myself: [https://github.com/WhaleFell/FastAPI-TGDiceAPI](https://github.com/WhaleFell/FastAPI-TGDiceAPI)
+8. code format black: [https://muzing.top/posts/a29e4743/](https://muzing.top/posts/a29e4743/)

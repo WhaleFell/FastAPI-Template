@@ -14,7 +14,7 @@ from .model import Base, User
 from app.utils.custom_log import logger
 
 
-async def init_table(is_drop: bool = True):
+async def init_table(is_drop: bool = False):
     """创建 database 下的所有表"""
     if is_drop:
         await drop_table()

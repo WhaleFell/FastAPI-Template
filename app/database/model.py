@@ -92,11 +92,15 @@ class User(Base):
         comment="注册时间",
     )
 
-    def __repr__(self):
-        return f"<User(user_id={self.id}, create_at={self.create_at})>"
-
-    def columns_to_dict(self) -> Optional[Dict[str, str]]:
+    def columns_to_dict(self) -> Dict[str, str]:
         dict_ = {}
         for key in self.__mapper__.c.keys():
             dict_[key] = getattr(self, key)
         return dict_
+
+    def __repr__(self):
+        data = ""
+        for key, value in self.columns_to_dict().items():
+            data += f"{key}={value}, "
+
+        return f"<User({data})>"

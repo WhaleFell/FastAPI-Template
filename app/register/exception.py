@@ -124,10 +124,16 @@ def register_exception(app: FastAPI):
         request: Request, exc: HTTPException
     ) -> ORJSONResponse:
         """HTTP通信错误"""
-        error_info = f"HTTP Error:{exc} URL:{request.url}"
+        error_info = f"HTTP Error:{exc.detail} {exc.status_code}"
         logger.error(error_info)
 
-        return ORJSONResponse(BaseResp(code=0, msg=error_info))
+        return response_body(
+            request=request,
+            content=BaseResp(
+                code=0,
+                msg=error_info,
+            ),
+        )
 
     @app.exception_handler(Exception)
     async def http_exception_handler(

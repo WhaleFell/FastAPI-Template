@@ -29,6 +29,7 @@ from app.utils import logger
 async def lifespan(app: FastAPI):
     # before app start 应用开始前执行
     logger.success("Before app start")
+    await init_table()
     yield
     # after app stop 应用结束后执行
     logger.success("After app stop")

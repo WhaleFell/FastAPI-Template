@@ -7,6 +7,7 @@
 from .base import BaseResp
 from pydantic import Field, BaseModel, ConfigDict
 from datetime import datetime
+from typing import Optional
 
 
 class User(BaseModel):
@@ -21,3 +22,7 @@ class User(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class TokenData(BaseModel):
+    username: str

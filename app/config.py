@@ -34,12 +34,13 @@ class Settings(BaseSettings):
         "/api/user/signup",
     ]  # 不校验 Cookie
 
-    # OAuth2 Secret openssl rand -hex 32
+    # to get a string like this run:
+    # openssl rand -hex 32
     OAUTH2_SECRET: str = (
         "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
     )
     ALGORITHM: str = "HS256"  # algorithm n. 算法
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 9000  # 过期时间
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 过期时间 minute
 
     # database config
     # SQLTIE3 sqlite+aiosqlite:///database.db  # 数据库文件名为 database.db 不存在的新建一个
