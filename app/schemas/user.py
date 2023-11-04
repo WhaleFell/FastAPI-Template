@@ -4,10 +4,23 @@
 # schemas/user.py
 # User 模型
 
-from .base import BaseResp
+from typing import Any, Dict, Optional, Union
+from typing_extensions import Annotated, Doc
 from pydantic import Field, BaseModel, ConfigDict
 from datetime import datetime
-from typing import Optional
+from fastapi import HTTPException, status
+
+
+class AuthenticateError(HTTPException):
+    """用户登陆/验证/注册 错误"""
+
+    def __init__(
+        self,
+        detail: Any = None,
+    ) -> None:
+        super().__init__(
+            status.HTTP_401_UNAUTHORIZED, detail, {"WWW-Authenticate": "Bearer"}
+        )
 
 
 class User(BaseModel):

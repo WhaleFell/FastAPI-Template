@@ -28,7 +28,8 @@ from typing_extensions import Annotated
 from typing import List, Optional, Union, Dict
 from datetime import timedelta, datetime
 
-from app.schemas import User, TokenData, BaseResp
+from app.schemas import User, TokenData, BaseResp, Token
+from app.schemas.user import AuthenticateError
 from app.config import settings
 from app.utils import logger
 
@@ -40,12 +41,13 @@ from app.database.connect import get_session
 # security n.安全
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
+import jose
 
 
 router = APIRouter()
 
 # oauth2_schema depend instance
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token/")
 
 
 # oauth2_schema sub-dependency -- get_current_user
@@ -55,27 +57,24 @@ async def get_current_user(
     db: Annotated[AsyncSession, Depends(get_session)],
 ) -> User:
     # authorization error
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
         payload = jwt.decode(
             token, settings.OAUTH2_SECRET, algorithms=[settings.ALGORITHM]
         )
         username: Optional[str] = payload.get("username")
         if username is None:
-            raise credentials_exception
+            raise AuthenticateError(detail="JWT username is empty.")
         token_data = TokenData(username=username)
+    except jose.exceptions.ExpiredSignatureError:
+        raise AuthenticateError(detail="Token is expire! Token已过期")
     except JWTError:
-        raise credentials_exception
+        raise AuthenticateError(detail="Parser JWT Error 解析 Token 错误")
 
     user = await UserCrud.getUserByName(
         session=db, username=token_data.username
     )
     if user is None:
-        raise credentials_exception
+        raise AuthenticateError(detail="Not found the username in JWT")
     return User.model_validate(user)
 
 
@@ -97,32 +96,25 @@ def create_access_token(
 
 @router.post("/token/")
 async def login_for_access_token(
-    username: Annotated[str, Body()],
-    password: Annotated[str, Body()],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[AsyncSession, Depends(get_session)],
-) -> BaseResp[Dict]:
-    """登录并获取 token"""
+) -> Token:
+    """登录并获取 token 使用登陆表单"""
     user = await UserCrud.authenticateUser(
-        session=db, username=username, password=password
+        session=db, username=form_data.username, password=form_data.password
     )
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+        raise AuthenticateError(
+            detail="Incorrect username or password 无效的用户名和密码"
         )
     access_token_expires = timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     access_token = create_access_token(
-        data=TokenData(username=username).model_dump(),
+        data=TokenData(username=user.username).model_dump(),
         expires_delta=access_token_expires,
     )
-    return BaseResp(
-        code=1,
-        msg="Token获取成功!",
-        data={"access_token": access_token, "token_type": "bearer"},
-    )
+    return Token(access_token=access_token, token_type="bearer")
 
 
 @router.post("/register/", tags=["user"])

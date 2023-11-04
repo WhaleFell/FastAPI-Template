@@ -11,6 +11,7 @@
 from .connect import AsyncSessionMaker
 from .model import User
 from typing import Optional, List, Sequence, Union
+from app.schemas.user import AuthenticateError
 
 # sqlalchemy type
 from sqlalchemy import (
@@ -52,8 +53,8 @@ class UserCrud:
 
         existUser = await UserCrud.getUserByName(session, username=username)
         if existUser:
-            raise Exception(
-                f"The username{username} is exist 已经存在的用户名:{username}"
+            raise AuthenticateError(
+                detail=f"The username:{username} is exist 已经存在的用户名:{username}"
             )
 
         user = User(username=username, password=password)
@@ -70,7 +71,7 @@ class UserCrud:
     @staticmethod
     async def authenticateUser(
         session: AsyncSession, username: str, password: str
-    ) -> Union[bool, User]:
+    ) -> Optional[User]:
         """验证一个用户
         authenticate /ɔːˈθen.tɪ.keɪt/ v. 验证
         """
@@ -82,4 +83,4 @@ class UserCrud:
             if user.password == password:
                 return user
 
-        return False
+        return None

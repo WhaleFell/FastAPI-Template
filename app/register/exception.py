@@ -15,6 +15,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
+from app.schemas.user import AuthenticateError
 from urllib.parse import parse_qsl
 
 # ALL Exception
@@ -135,8 +136,24 @@ def register_exception(app: FastAPI):
             ),
         )
 
+    @app.exception_handler(AuthenticateError)
+    async def authenticate_exeception_handler(
+        request: Request, exc: AuthenticateError
+    ):
+        error_info = f"Authenticate Error:{exc.detail}"
+
+        logger.error(error_info)
+
+        return response_body(
+            request=request,
+            content=BaseResp(
+                code=0,
+                msg=error_info,
+            ),
+        )
+
     @app.exception_handler(Exception)
-    async def http_exception_handler(
+    async def all_exception_handler(
         request: Request, exc: Exception
     ) -> ORJSONResponse:
         """全局异常"""
